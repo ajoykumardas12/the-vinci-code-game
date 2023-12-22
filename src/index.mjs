@@ -54,7 +54,18 @@ function startGame(container) {
     event.preventDefault();
     const newName = container.getElementsByTagName("input")[0].value;
     name = newName;
+    addNameToLocalStorage(name);
     displayMenu();
+  }
+
+  function addNameToLocalStorage(name) {
+    localStorage.setItem("currentPlayer", name);
+    const players = localStorage.getItem("players");
+    if (players && !players.includes(name)) {
+      localStorage.setItem("players", [...players, name]);
+    } else {
+      localStorage.setItem("players", [name]);
+    }
   }
 
   function displayMenu() {
