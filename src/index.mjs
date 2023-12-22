@@ -100,33 +100,36 @@ function startGame(container) {
 
   function displayNumbersForLevel() {
     console.log(generatedNumbers);
+
     const numbersScreen = document.createElement("div");
     numbersScreen.innerHTML = `<div>Level ${level}</div>`;
     const currentNumberContainer = document.createElement("div");
-    numbersScreen.append(currentNumberContainer);
+    numbersScreen.appendChild(currentNumberContainer);
 
-    container.innerHTML = ``;
+    container.innerHTML = "";
     container.appendChild(numbersScreen);
 
     function updateCurrentNumber(number) {
       currentNumberContainer.innerText = number;
     }
+
     let index = 0;
     updateCurrentNumber(generatedNumbers[0]);
     index++;
 
     const loop = setInterval(() => {
-      if (index >= generatedNumbers.length - 1) {
+      if (index >= generatedNumbers.length) {
         clearInterval(loop);
-        getNumbersFromUser();
-        return;
+        setTimeout(() => {
+          getNumbersFromUser();
+        }, 1000);
+      } else {
+        level !== 1 && updateCurrentNumber(generatedNumbers[index++]);
       }
-      updateCurrentNumber(generatedNumbers[index++]);
     }, 1000);
   }
 
   function getNumbersFromUser() {
-    console.log("called getNumbers");
     let index = 0;
 
     const getNumbersScreen = document.createElement("div");
@@ -146,6 +149,7 @@ function startGame(container) {
     getNumbersScreen.append(form);
     container.innerHTML = ``;
     container.append(getNumbersScreen);
+    input.focus();
 
     function handleNumberSubmit(event) {
       event.preventDefault();
