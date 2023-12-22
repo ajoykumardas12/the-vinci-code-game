@@ -99,6 +99,7 @@ function startGame(container) {
   }
 
   function displayNumbersForLevel() {
+    console.log(generatedNumbers);
     const numbersScreen = document.createElement("div");
     numbersScreen.innerHTML = `<div>Level ${level}</div>`;
     const currentNumberContainer = document.createElement("div");
@@ -118,21 +119,52 @@ function startGame(container) {
       if (index >= generatedNumbers.length - 1) {
         clearInterval(loop);
         getNumbersFromUser();
+        return;
       }
-      console.log(generatedNumbers[index++]);
       updateCurrentNumber(generatedNumbers[index++]);
     }, 1000);
   }
 
   function getNumbersFromUser() {
-    for (let i = 0; i < level; i++) {
-      let enteredValue = prompt(
-        "Enter values in order one at a time: (press enter after every value)"
-      );
-      if (enteredValue === "" || enteredValue === null) {
-        enteredValue = NaN;
+    console.log("called getNumbers");
+    let index = 0;
+
+    const getNumbersScreen = document.createElement("div");
+    getNumbersScreen.innerHTML = `<div>Level ${level}</div>`;
+
+    const form = document.createElement("form");
+    // const numberInputsContainer = document.createElement("div");
+
+    const input = document.createElement("input");
+    input.type = "number";
+    const button = document.createElement("button");
+    button.textContent = "OK";
+    button.type = "submit";
+    form.append(input, button);
+    form.addEventListener("submit", handleNumberSubmit);
+
+    getNumbersScreen.append(form);
+    container.innerHTML = ``;
+    container.append(getNumbersScreen);
+
+    function handleNumberSubmit(event) {
+      event.preventDefault();
+      let enteredNumber = container.getElementsByTagName("input")[0].value;
+      if (enteredNumber === "" || enteredNumber === null) {
+        enteredNumber = NaN;
       }
-      enteredNumbers.push(Number(enteredValue));
+      enteredNumbers.push(Number(enteredNumber));
+      input.value = "";
+
+      if (index === level - 1) {
+        if (verifyLevel()) {
+          updateLevel(level + 1);
+          gameLoop();
+        } else {
+          alert(`Your score is: ${level - 1}`);
+        }
+      }
+      index++;
     }
   }
 
@@ -146,12 +178,6 @@ function startGame(container) {
   function gameLoop() {
     generateNumbersForLevel();
     displayNumbersForLevel();
-    // if (verifyLevel()) {
-    //   updateLevel(level + 1);
-    //   gameLoop();
-    // } else {
-    //   alert(`Your score is: ${level}`);
-    // }
   }
 }
 
