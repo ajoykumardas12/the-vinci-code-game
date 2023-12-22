@@ -165,11 +165,32 @@ function startGame(container) {
           updateLevel(level + 1);
           gameLoop();
         } else {
-          alert(`Your score is: ${level - 1}`);
+          showResult();
         }
       }
       index++;
     }
+  }
+
+  function showResult() {
+    const resultScreen = document.createElement("div");
+    const result = document.createElement("p");
+    result.textContent = `Your score is: ${level - 1}`;
+
+    const showLeaderBoardButton = document.createElement("button");
+    showLeaderBoardButton.innerHTML = `<a href="/leaderboard">Leaderboard</a>`;
+
+    const playAgainButton = document.createElement("button");
+    playAgainButton.textContent = "Play Again";
+    playAgainButton.addEventListener("click", () => {
+      updateLevel(1);
+      gameLoop();
+    });
+
+    resultScreen.append(result, showLeaderBoardButton, playAgainButton);
+
+    container.innerHTML = ``;
+    container.append(resultScreen);
   }
 
   function verifyLevel() {
