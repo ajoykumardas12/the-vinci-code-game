@@ -661,7 +661,26 @@ function startGame(container) {
         for(let i = 0; i < level; i++)generatedNumbers.push(randomNumber());
     }
     function displayNumbersForLevel() {
-        for(let i = 0; i < level; i++)alert(generatedNumbers[i]);
+        const numbersScreen = document.createElement("div");
+        numbersScreen.innerHTML = `<div>Level ${level}</div>`;
+        const currentNumberContainer = document.createElement("div");
+        numbersScreen.append(currentNumberContainer);
+        container.innerHTML = ``;
+        container.appendChild(numbersScreen);
+        function updateCurrentNumber(number) {
+            currentNumberContainer.innerText = number;
+        }
+        let index = 0;
+        updateCurrentNumber(generatedNumbers[0]);
+        index++;
+        const loop = setInterval(()=>{
+            if (index >= generatedNumbers.length - 1) {
+                clearInterval(loop);
+                getNumbersFromUser();
+            }
+            console.log(generatedNumbers[index++]);
+            updateCurrentNumber(generatedNumbers[index++]);
+        }, 1000);
     }
     function getNumbersFromUser() {
         for(let i = 0; i < level; i++){
@@ -679,11 +698,12 @@ function startGame(container) {
     function gameLoop() {
         generateNumbersForLevel();
         displayNumbersForLevel();
-        getNumbersFromUser();
-        if (verifyLevel()) {
-            updateLevel(level + 1);
-            gameLoop();
-        } else alert(`Your score is: ${level}`);
+    // if (verifyLevel()) {
+    //   updateLevel(level + 1);
+    //   gameLoop();
+    // } else {
+    //   alert(`Your score is: ${level}`);
+    // }
     }
 }
 startGame(myGameContainer);
