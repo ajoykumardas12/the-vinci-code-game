@@ -36,7 +36,7 @@ function startGame(container) {
     container.innerHTML = `
     <section>
       <h2>Please enter your name</h2>
-      <form onsubmit="event.preventDefault(); handleNameSubmit()">
+      <form id="welcome-name-form">
         <input name="name" class="name-input" />
         <button type="submit">OK</button>
       </form>
@@ -44,9 +44,17 @@ function startGame(container) {
     `;
   }
 
-  // eslint-disable-next-line no-unused-vars
-  function handleNameSubmit() {
-    console.log("c");
+  (function () {
+    document
+      .querySelector("#welcome-name-form")
+      .addEventListener("submit", handleNameSubmit);
+  })();
+
+  function handleNameSubmit(event) {
+    event.preventDefault();
+    const newName = container.getElementsByTagName("input")[0].value;
+    name = newName;
+    displayMenu();
   }
 
   function displayMenu() {
