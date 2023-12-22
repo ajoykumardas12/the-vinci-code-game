@@ -219,10 +219,27 @@ function startGame(container) {
     }
   }
 
+  function storeResult(playerName, score) {
+    let storedResults = JSON.parse(localStorage.getItem("results"));
+
+    if (storedResults) {
+      if (storedResults[score]) {
+        storedResults[score] = [...storedResults[score], playerName];
+      } else {
+        storedResults[score] = [playerName];
+      }
+    } else {
+      storedResults = { [score]: playerName };
+    }
+
+    localStorage.setItem("results", JSON.stringify(storedResults));
+  }
+
   function showResult() {
+    const score = level - 1;
     const resultScreen = document.createElement("div");
     const result = document.createElement("p");
-    result.textContent = `Your score is: ${level - 1}`;
+    result.textContent = `Your score is: ${score}`;
 
     const showLeaderBoardButton = document.createElement("button");
     showLeaderBoardButton.innerHTML = `<a href="/leaderboard">Leaderboard</a>`;
@@ -244,6 +261,8 @@ function startGame(container) {
       playAgainButton,
       backToMenuButton
     );
+
+    storeResult(name, score);
 
     container.innerHTML = ``;
     container.append(resultScreen);
