@@ -1,102 +1,112 @@
 import "./styles.css";
-/*
-1. Get the user's name
-2. Show a menu
-3. Menu items:
-  a. Start New Game
-  b. See Leaderboard
-  c. Update Name
-*/
 const myGameContainer = document.getElementById("game");
 
-class Game {
-  constructor(container) {
-    this.container = container;
-  }
+function startGame(container) {
+  let name;
+  let generatedNumbers = [];
+  let enteredNumbers = [];
+  let level = 1;
 
-  randomNumber() {
+  start();
+
+  function randomNumber() {
     return Math.floor(Math.random() * 10);
   }
 
-  start() {
-    this.name = prompt("Enter your name:") || "Guest";
-    this.displayMenu();
+  function start() {
+    askName();
   }
 
-  handleMenuClick = function (event) {
+  const handleMenuClick = (event) => {
     switch (event.target.dataset?.val) {
       case "1":
-        this.updateLevel(1);
-        this.gameLoop();
+        updateLevel(1);
+        gameLoop();
         break;
       case "2":
         console.log("Will Show Leaderboard Now...");
         break;
       case "3":
-        this.name = prompt("Enter name to be updated:") || "Guest";
-        this.displayMenu();
+        name = prompt("Enter name to be updated:") || "Guest";
+        displayMenu();
     }
-  }.bind(this);
+  };
 
-  displayMenu() {
-    this.container.innerHTML = `Welcome ${this.name},
+  function askName() {
+    container.innerHTML = `
+    <section>
+      <h2>Please enter your name</h2>
+      <form onsubmit="event.preventDefault(); handleNameSubmit()">
+        <input name="name" class="name-input" />
+        <button type="submit">OK</button>
+      </form>
+    </section>
+    `;
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  function handleNameSubmit() {
+    console.log("c");
+  }
+
+  function displayMenu() {
+    container.innerHTML = `Welcome ${name},
     <ol>
       <li data-val="1">Start New Game</li>
       <li data-val="2">See Leaderboard</li>
       <li data-val="3">Update Name</li>
     </ol>`;
-    this.container.removeEventListener("click", this.handleMenuClick);
-    this.container.addEventListener("click", this.handleMenuClick);
+    container.removeEventListener("click", handleMenuClick);
+    container.addEventListener("click", handleMenuClick);
   }
-  updateLevel(level = 1) {
-    this.generatedNumbers = [];
-    this.enteredNumbers = [];
-    this.level = level;
+  function updateLevel(newLevel = 1) {
+    generatedNumbers = [];
+    enteredNumbers = [];
+    level = newLevel;
   }
 
-  generateNumbersForLevel() {
-    for (let i = 0; i < this.level; i++) {
-      this.generatedNumbers.push(this.randomNumber());
+  function generateNumbersForLevel() {
+    for (let i = 0; i < level; i++) {
+      generatedNumbers.push(randomNumber());
     }
   }
 
-  displayNumbersForLevel() {
-    for (let i = 0; i < this.level; i++) {
-      alert(this.generatedNumbers[i]);
+  function displayNumbersForLevel() {
+    for (let i = 0; i < level; i++) {
+      alert(generatedNumbers[i]);
     }
   }
 
-  getNumbersFromUser() {
-    for (let i = 0; i < this.level; i++) {
+  function getNumbersFromUser() {
+    for (let i = 0; i < level; i++) {
       let enteredValue = prompt(
-        "Enter values in order one at a time: (press enter after every value)",
+        "Enter values in order one at a time: (press enter after every value)"
       );
       if (enteredValue === "" || enteredValue === null) {
         enteredValue = NaN;
       }
-      this.enteredNumbers.push(Number(enteredValue));
+      enteredNumbers.push(Number(enteredValue));
     }
   }
 
-  verifyLevel() {
-    for (let i = 0; i < this.level; i++) {
-      if (this.enteredNumbers[i] !== this.generatedNumbers[i]) return false;
+  function verifyLevel() {
+    for (let i = 0; i < level; i++) {
+      if (enteredNumbers[i] !== generatedNumbers[i]) return false;
     }
     return true;
   }
 
-  gameLoop() {
-    this.generateNumbersForLevel();
-    this.displayNumbersForLevel();
-    this.getNumbersFromUser();
-    if (this.verifyLevel()) {
-      this.updateLevel(this.level + 1);
-      this.gameLoop();
+  function gameLoop() {
+    generateNumbersForLevel();
+    displayNumbersForLevel();
+    getNumbersFromUser();
+    if (verifyLevel()) {
+      updateLevel(level + 1);
+      gameLoop();
     } else {
-      alert(`Your score is: ${this.level}`);
+      alert(`Your score is: ${level}`);
     }
   }
 }
 
-let myGameInstance = new Game(myGameContainer);
-myGameInstance.start();
+startGame(myGameContainer);
