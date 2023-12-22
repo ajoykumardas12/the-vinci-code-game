@@ -14,23 +14,18 @@ function startGame(container) {
   }
 
   function start() {
-    askName();
+    loadNameFromLocalStorage();
   }
 
-  const handleMenuClick = (event) => {
-    switch (event.target.dataset?.val) {
-      case "1":
-        updateLevel(1);
-        gameLoop();
-        break;
-      case "2":
-        console.log("Will Show Leaderboard Now...");
-        break;
-      case "3":
-        name = prompt("Enter name to be updated:") || "Guest";
-        displayMenu();
+  function loadNameFromLocalStorage() {
+    const currentPlayer = localStorage.getItem("currentPlayer");
+    if (!currentPlayer) {
+      askName();
+    } else {
+      name = currentPlayer;
+      displayMenu();
     }
-  };
+  }
 
   function askName() {
     container.innerHTML = `
@@ -42,13 +37,10 @@ function startGame(container) {
       </form>
     </section>
     `;
+    const enterNameForm = document.querySelector("#welcome-name-form");
+    if (enterNameForm)
+      enterNameForm.addEventListener("submit", handleNameSubmit);
   }
-
-  (function () {
-    document
-      .querySelector("#welcome-name-form")
-      .addEventListener("submit", handleNameSubmit);
-  })();
 
   function handleNameSubmit(event) {
     event.preventDefault();
@@ -78,6 +70,22 @@ function startGame(container) {
     container.removeEventListener("click", handleMenuClick);
     container.addEventListener("click", handleMenuClick);
   }
+
+  function handleMenuClick(event) {
+    switch (event.target.dataset?.val) {
+      case "1":
+        updateLevel(1);
+        gameLoop();
+        break;
+      case "2":
+        console.log("Will Show Leaderboard Now...");
+        break;
+      case "3":
+        name = prompt("Enter name to be updated:") || "Guest";
+        displayMenu();
+    }
+  }
+
   function updateLevel(newLevel = 1) {
     generatedNumbers = [];
     enteredNumbers = [];
