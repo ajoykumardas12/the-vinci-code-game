@@ -234,7 +234,16 @@ function startGame(container) {
       gameLoop();
     });
 
-    resultScreen.append(result, showLeaderBoardButton, playAgainButton);
+    const backToMenuButton = document.createElement("button");
+    backToMenuButton.textContent = "Back to Menu";
+    backToMenuButton.addEventListener("click", displayMenu);
+
+    resultScreen.append(
+      result,
+      showLeaderBoardButton,
+      playAgainButton,
+      backToMenuButton
+    );
 
     container.innerHTML = ``;
     container.append(resultScreen);
