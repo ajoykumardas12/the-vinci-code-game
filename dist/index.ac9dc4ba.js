@@ -602,16 +602,18 @@ function startGame(container) {
     <section>
       <h2>Please enter your name</h2>
       <form id="welcome-name-form">
-        <input name="name" class="name-input" />
+        <input name="name" id="welcome-name" class="name-input" />
         <button type="submit">OK</button>
       </form>
     </section>
     `;
+        const welcomeNameInput = document.querySelector("#welcome-name");
+        welcomeNameInput && welcomeNameInput.focus();
         const enterNameForm = document.querySelector("#welcome-name-form");
         if (enterNameForm) enterNameForm.addEventListener("submit", handleNameSubmit);
     }
-    function handleNameSubmit(event) {
-        event.preventDefault();
+    function handleNameSubmit(event1) {
+        event1.preventDefault();
         const newName = container.getElementsByTagName("input")[0].value;
         name = newName;
         addNameToLocalStorage(name);
@@ -619,14 +621,14 @@ function startGame(container) {
     }
     function addNameToLocalStorage(name) {
         localStorage.setItem("currentPlayer", name);
-        const players = localStorage.getItem("players");
-        if (players && !players.includes(name)) localStorage.setItem("players", [
+        const players = JSON.parse(localStorage.getItem("players"));
+        if (players && !players.includes(name)) localStorage.setItem("players", JSON.stringify([
             ...players,
             name
-        ]);
-        else localStorage.setItem("players", [
+        ]));
+        else localStorage.setItem("players", JSON.stringify([
             name
-        ]);
+        ]));
     }
     function displayMenu() {
         container.innerHTML = `Welcome ${name},
@@ -638,8 +640,49 @@ function startGame(container) {
         container.removeEventListener("click", handleMenuClick);
         container.addEventListener("click", handleMenuClick);
     }
-    function handleMenuClick(event) {
-        switch(event.target.dataset?.val){
+    function updateName() {
+        container.innerHTML = `
+      <section>
+        <h2>Please enter new name to update</h2>
+        <form id="update-name-form">
+          <input name="name" id="update-name" class="name-input" />
+          <button type="submit">OK</button>
+        </form>
+      </section>
+      `;
+        const updateNameInput = document.querySelector("#update-name");
+        updateNameInput && updateNameInput.focus();
+        const updateNameForm = document.querySelector("#update-name-form");
+        if (updateNameForm) updateNameForm.addEventListener("submit", handleUpdateNameSubmit);
+    }
+    function replaceNameInLocalStorage(oldName, updatedName) {
+        console.log(oldName, updatedName);
+        localStorage.setItem("currentPlayer", updatedName);
+        const players = JSON.parse(localStorage.getItem("players"));
+        if (players) {
+            const index = players.indexOf(oldName);
+            console.log(`found player ${oldName} at idx ${index}`);
+            players[index] = updatedName;
+            const newPlayers = [
+                ...players
+            ];
+            console.log(newPlayers, players);
+            localStorage.setItem("players", JSON.stringify(players));
+        } else localStorage.setItem("players", JSON.stringify([
+            updatedName
+        ]));
+    // TODO: update leaderboard
+    }
+    function handleUpdateNameSubmit() {
+        event.preventDefault();
+        const updatedName = container.getElementsByTagName("input")[0].value;
+        const oldName = name;
+        name = updatedName;
+        replaceNameInLocalStorage(oldName, updatedName);
+        displayMenu();
+    }
+    function handleMenuClick(event1) {
+        switch(event1.target.dataset?.val){
             case "1":
                 updateLevel(1);
                 gameLoop();
@@ -648,8 +691,7 @@ function startGame(container) {
                 console.log("Will Show Leaderboard Now...");
                 break;
             case "3":
-                name = prompt("Enter name to be updated:") || "Guest";
-                displayMenu();
+                updateName();
         }
     }
     function updateLevel(newLevel = 1) {
@@ -700,8 +742,8 @@ function startGame(container) {
         container.innerHTML = ``;
         container.append(getNumbersScreen);
         input.focus();
-        function handleNumberSubmit(event) {
-            event.preventDefault();
+        function handleNumberSubmit(event1) {
+            event1.preventDefault();
             let enteredNumber = container.getElementsByTagName("input")[0].value;
             if (enteredNumber === "" || enteredNumber === null) enteredNumber = NaN;
             enteredNumbers.push(Number(enteredNumber));
