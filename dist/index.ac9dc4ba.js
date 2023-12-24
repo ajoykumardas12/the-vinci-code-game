@@ -688,7 +688,7 @@ function startGame(container) {
                 gameLoop();
                 break;
             case "2":
-                console.log("Will Show Leaderboard Now...");
+                showLeaderboard();
                 break;
             case "3":
                 updateName();
@@ -758,18 +758,11 @@ function startGame(container) {
         }
     }
     function storeResult(playerName, score) {
-        let storedResults = JSON.parse(localStorage.getItem("results"));
-        if (storedResults) {
-            if (storedResults[score]) storedResults[score] = [
-                ...storedResults[score],
-                playerName
-            ];
-            else storedResults[score] = [
-                playerName
-            ];
-        } else storedResults = {
-            [score]: playerName
-        };
+        let storedResults = JSON.parse(localStorage.getItem("results")) || [];
+        storedResults.push({
+            score: score,
+            name: playerName
+        });
         localStorage.setItem("results", JSON.stringify(storedResults));
     }
     function showResult() {
@@ -792,6 +785,35 @@ function startGame(container) {
         storeResult(name, score);
         container.innerHTML = ``;
         container.append(resultScreen);
+    }
+    function showLeaderboard() {
+        const results = JSON.parse(localStorage.getItem("results"));
+        results.sort((a, b)=>b.score - a.score);
+        let tableRowsHTML = `
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Score</th>
+      <th scope="col">Player</th>
+    </tr>
+    `;
+        let index = 0;
+        while(index < 5 && index < results.length){
+            tableRowsHTML += `<tr>
+        <th scope="row">${index + 1}</th>
+        <td>${results[index].score}</td>
+        <td>${results[index].name}</td>
+    </tr>`;
+            index++;
+        }
+        const leaderboardScreen = document.createElement("div");
+        const table = document.createElement("table");
+        table.innerHTML = tableRowsHTML;
+        const backToMenuButton = document.createElement("button");
+        backToMenuButton.textContent = "Back to Menu";
+        backToMenuButton.addEventListener("click", displayMenu);
+        leaderboardScreen.append(table, backToMenuButton);
+        container.innerHTML = ``;
+        container.append(leaderboardScreen);
     }
     function verifyLevel() {
         for(let i = 0; i < level; i++){
