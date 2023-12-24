@@ -632,8 +632,11 @@ function startGame(container) {
     }
     function displayMenu() {
         container.innerHTML = `
-    <section>
-    <div class="welcome-message">Welcome <p class="name">${name}</p>,</div>
+    <section class="menu__section">
+      <div class="welcome-message">
+        Welcome
+        <p class="name">${name}</p>,
+      </div>
       <ul>
         <li><button data-val="1">Start New Game</button></li>
         <li><button data-val="2">See Leaderboard</button></li>
