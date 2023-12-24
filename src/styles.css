@@ -1,7 +1,7 @@
 :root {
   --brand: #33afa5;
   --darkest: #0a3342;
-  --dark: #164e63;
+  --dark: #205e75;
   --mid: #bec9df;
   --light: #e6e6e6;
   --white: #ffffff;
@@ -23,7 +23,7 @@ body {
 
 button {
   display: inline-block;
-  padding: 0.3rem 0.6rem;
+  padding: 0.5rem 1rem;
   font-size: 1rem;
   font-weight: 500;
   vertical-align: middle;
@@ -49,9 +49,22 @@ button:focus {
   transition-duration: 0.1s;
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  button {
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background: #6cd1c9;
+  }
+}
+
 form input {
-  padding: 5px 12px;
-  font-size: 1rem;
+  padding: 0.6rem 0.8rem;
+  font-size: 1.3rem;
   color: var(--darkest);
   vertical-align: middle;
   background-color: var(--white);
@@ -91,14 +104,117 @@ main section {
   /* gap: ; */
 }
 
-.welcome-message {
-  display: flex;
-  gap: 0.2rem;
+.menu__section {
+  .welcome-message {
+    display: flex;
+    gap: 0.2rem;
+    margin-bottom: 2rem;
+    font-size: 3rem;
+  }
+
+  .name {
+    color: var(--brand);
+    margin-left: 0.7rem;
+  }
+
+  ul {
+    list-style: none;
+
+    li {
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.level {
+  text-align: center;
+  font-size: 2rem;
   margin-bottom: 2rem;
+  color: var(--brand);
+}
+
+.result__section {
+  p {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--brand);
+  }
+  b {
+    color: var(--brand);
+  }
+  button {
+    margin: 0.5rem 2rem;
+  }
+}
+
+.leaderboard__section {
+  font-size: 1.5rem;
+
+  [table-header] {
+    background-color: var(--darkest);
+  }
+
+  tr[rank="1"] {
+    background-color: var(--brand);
+  }
+
+  tr[rank="2"] {
+    background-color: rgba(74, 204, 193, 0.349);
+  }
+
+  tr[rank="3"] {
+    background-color: #33afa52d;
+  }
+
+  td {
+    text-align: center;
+  }
+
+  button {
+    margin: 2rem 5rem 0;
+  }
+}
+
+.update-name__section {
+  h2 {
+    margin-bottom: 2rem;
+  }
+
+  #cancel-update-name-button {
+    margin-top: 1rem;
+    width: max-content;
+    align-self: center;
+  }
+}
+
+.current-number {
+  background: var(--brand);
+  text-align: center;
+  align-self: center;
+  width: max-content;
+  padding: 1.5rem 2rem;
+  border-radius: 5px;
   font-size: 3rem;
 }
 
-.name {
-  color: var(--brand);
-  margin-left: 0.7rem;
+.numbers-animation {
+  animation: pulse 1s ease-out;
+  animation-iteration-count: infinite;
+  animation-delay: 0s;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0.5;
+  }
 }

@@ -32,7 +32,7 @@ function startGame(container) {
     <section class="ask-name__section">
       <h2>Please enter your name</h2>
       <form id="welcome-name-form">
-        <input name="name" id="welcome-name" class="name-input" />
+        <input name="name" id="welcome-name" class="name-input" required />
         <button type="submit">OK</button>
       </form>
     </section>
@@ -85,8 +85,8 @@ function startGame(container) {
       <section class="update-name__section">
         <h2>Please enter new name to update</h2>
         <form id="update-name-form">
-          <input name="name" id="update-name" class="name-input" />
-          <button type="submit">OK</button>
+          <input name="name" id="update-name" class="name-input" required />
+          <button type="submit">Update</button>
         </form>
         <button id="cancel-update-name-button">Cancel</button>
       </section>
@@ -119,7 +119,7 @@ function startGame(container) {
     // TODO: update leaderboard
   }
 
-  function handleUpdateNameSubmit() {
+  function handleUpdateNameSubmit(event) {
     event.preventDefault();
     const updatedName = container.getElementsByTagName("input")[0].value;
     const oldName = name;
@@ -159,6 +159,7 @@ function startGame(container) {
     numbersScreen.className = "numbers-display__section";
     numbersScreen.innerHTML = `<div class="level">Level ${level}</div>`;
     const currentNumberContainer = document.createElement("div");
+    currentNumberContainer.className = "current-number";
     numbersScreen.appendChild(currentNumberContainer);
 
     container.innerHTML = "";
@@ -178,7 +179,7 @@ function startGame(container) {
         clearInterval(loop);
         setTimeout(() => {
           getNumbersFromUser();
-        }, 1000);
+        }, 0);
       } else {
         if (level !== 1) {
           updateCurrentNumber(generatedNumbers[index++]);
@@ -194,17 +195,21 @@ function startGame(container) {
 
     const getNumbersScreen = document.createElement("section");
     getNumbersScreen.className = "get-numbers__section";
-    getNumbersScreen.innerHTML = `<div>Level ${level}</div>`;
+    getNumbersScreen.innerHTML = `<div class="level">Level ${level}</div>`;
 
     const form = document.createElement("form");
     // const numberInputsContainer = document.createElement("div");
 
+    const label = document.createElement("label");
+    label.htmlFor = "get-numbers-input";
+    label.textContent = "Enter the next number";
     const input = document.createElement("input");
+    input.id = "get-numbers-input";
     input.type = "number";
     const button = document.createElement("button");
     button.textContent = "OK";
     button.type = "submit";
-    form.append(input, button);
+    form.append(label, input, button);
     form.addEventListener("submit", handleNumberSubmit);
 
     getNumbersScreen.append(form);
@@ -246,7 +251,7 @@ function startGame(container) {
     const resultScreen = document.createElement("section");
     resultScreen.className = "result__section";
     const result = document.createElement("p");
-    result.textContent = `Your score is: ${score}`;
+    result.innerHTML = `Your score is: <b>${score}</b>`;
 
     const showLeaderBoardButton = document.createElement("button");
     showLeaderBoardButton.textContent = `Leaderboard`;
@@ -281,15 +286,15 @@ function startGame(container) {
     results.sort((a, b) => b.score - a.score);
 
     let tableRowsHTML = `
-    <tr>
-      <th scope="col"></th>
+    <tr table-header>
+      <th scope="col">Rank</th>
       <th scope="col">Score</th>
       <th scope="col">Player</th>
     </tr>
     `;
     let index = 0;
     while (index < 5 && index < results.length) {
-      tableRowsHTML += `<tr>
+      tableRowsHTML += `<tr rank=${index + 1}>
         <th scope="row">${index + 1}</th>
         <td>${results[index].score}</td>
         <td>${results[index].name}</td>
