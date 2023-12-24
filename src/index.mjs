@@ -29,7 +29,7 @@ function startGame(container) {
 
   function askName() {
     container.innerHTML = `
-    <section>
+    <section class="ask-name__section">
       <h2>Please enter your name</h2>
       <form id="welcome-name-form">
         <input name="name" id="welcome-name" class="name-input" />
@@ -64,24 +64,28 @@ function startGame(container) {
   }
 
   function displayMenu() {
-    container.innerHTML = `Welcome ${name},
-    <ol>
-      <li data-val="1">Start New Game</li>
-      <li data-val="2">See Leaderboard</li>
-      <li data-val="3">Update Name</li>
-    </ol>`;
+    container.innerHTML = `
+    <section>
+    <div class="welcome-message">Welcome <p class="name">${name}</p>,</div>
+      <ul>
+        <li><button data-val="1">Start New Game</button></li>
+        <li><button data-val="2">See Leaderboard</button></li>
+        <li><button data-val="3">Update Name</button></li>
+      </ul>
+    </section>`;
     container.removeEventListener("click", handleMenuClick);
     container.addEventListener("click", handleMenuClick);
   }
 
   function updateName() {
     container.innerHTML = `
-      <section>
+      <section class="update-name__section">
         <h2>Please enter new name to update</h2>
         <form id="update-name-form">
           <input name="name" id="update-name" class="name-input" />
           <button type="submit">OK</button>
         </form>
+        <button id="cancel-update-name-button">Cancel</button>
       </section>
       `;
     const updateNameInput = document.querySelector("#update-name");
@@ -90,6 +94,8 @@ function startGame(container) {
     const updateNameForm = document.querySelector("#update-name-form");
     if (updateNameForm)
       updateNameForm.addEventListener("submit", handleUpdateNameSubmit);
+    const cancelButton = document.querySelector("#cancel-update-name-button");
+    cancelButton && cancelButton.addEventListener("click", displayMenu);
   }
 
   function replaceNameInLocalStorage(oldName, updatedName) {
@@ -146,10 +152,9 @@ function startGame(container) {
   }
 
   function displayNumbersForLevel() {
-    console.log(generatedNumbers);
-
-    const numbersScreen = document.createElement("div");
-    numbersScreen.innerHTML = `<div>Level ${level}</div>`;
+    const numbersScreen = document.createElement("section");
+    numbersScreen.className = "numbers-display__section";
+    numbersScreen.innerHTML = `<div class="level">Level ${level}</div>`;
     const currentNumberContainer = document.createElement("div");
     numbersScreen.appendChild(currentNumberContainer);
 
@@ -161,6 +166,7 @@ function startGame(container) {
     }
 
     let index = 0;
+    currentNumberContainer.classList.add("numbers-animation");
     updateCurrentNumber(generatedNumbers[0]);
     index++;
 
@@ -171,7 +177,11 @@ function startGame(container) {
           getNumbersFromUser();
         }, 1000);
       } else {
-        level !== 1 && updateCurrentNumber(generatedNumbers[index++]);
+        if (level !== 1) {
+          updateCurrentNumber(generatedNumbers[index++]);
+          currentNumberContainer.classList.remove("numbers-animation");
+          currentNumberContainer.classList.add("numbers-animation");
+        }
       }
     }, 1000);
   }
@@ -179,7 +189,8 @@ function startGame(container) {
   function getNumbersFromUser() {
     let index = 0;
 
-    const getNumbersScreen = document.createElement("div");
+    const getNumbersScreen = document.createElement("section");
+    getNumbersScreen.className = "get-numbers__section";
     getNumbersScreen.innerHTML = `<div>Level ${level}</div>`;
 
     const form = document.createElement("form");
@@ -229,12 +240,14 @@ function startGame(container) {
 
   function showResult() {
     const score = level - 1;
-    const resultScreen = document.createElement("div");
+    const resultScreen = document.createElement("section");
+    resultScreen.className = "result__section";
     const result = document.createElement("p");
     result.textContent = `Your score is: ${score}`;
 
     const showLeaderBoardButton = document.createElement("button");
-    showLeaderBoardButton.innerHTML = `<a href="/leaderboard">Leaderboard</a>`;
+    showLeaderBoardButton.textContent = `Leaderboard`;
+    showLeaderBoardButton.addEventListener("click", showLeaderboard);
 
     const playAgainButton = document.createElement("button");
     playAgainButton.textContent = "Play Again";
@@ -281,7 +294,8 @@ function startGame(container) {
       index++;
     }
 
-    const leaderboardScreen = document.createElement("div");
+    const leaderboardScreen = document.createElement("section");
+    leaderboardScreen.className = "leaderboard__section";
     const table = document.createElement("table");
     table.innerHTML = tableRowsHTML;
 
