@@ -810,6 +810,19 @@ function startGame(container) {
     }
     function showLeaderboard() {
         const results = JSON.parse(localStorage.getItem("results"));
+        if (!results) {
+            const leaderboardScreen = document.createElement("section");
+            leaderboardScreen.className = "leaderboard__section";
+            const noResults = document.createElement("div");
+            noResults.className = "no-results";
+            noResults.textContent = "No results to show :(";
+            const backToMenuButton = document.createElement("button");
+            backToMenuButton.textContent = "Back to Menu";
+            backToMenuButton.addEventListener("click", displayMenu);
+            leaderboardScreen.append(noResults, backToMenuButton);
+            container.innerHTML = ``;
+            container.append(leaderboardScreen);
+        }
         results.sort((a, b)=>b.score - a.score);
         let tableRowsHTML = `
     <tr table-header>

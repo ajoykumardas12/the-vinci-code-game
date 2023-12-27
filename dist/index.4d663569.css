@@ -144,6 +144,10 @@ main section {
   margin: .5rem 2rem;
 }
 
+.no-results {
+  text-align: center;
+}
+
 .leaderboard__section {
   font-size: 1.5rem;
 }
