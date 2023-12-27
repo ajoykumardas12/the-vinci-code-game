@@ -63,6 +63,7 @@ form {
 }
 
 form input {
+  margin: 1rem 0;
   padding: 0.6rem 0.8rem;
   font-size: 1.3rem;
   color: var(--darkest);
